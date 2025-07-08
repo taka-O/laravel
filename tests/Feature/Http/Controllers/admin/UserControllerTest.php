@@ -8,7 +8,7 @@ use Tests\Feature\FeatureBaseTestCase;
 use App\Models\User;
 use App\Enums\Role;
 
-class UsersControllerTest extends FeatureBaseTestCase
+class UserControllerTest extends FeatureBaseTestCase
 {
     public function setUp(): void
     {
@@ -26,7 +26,7 @@ class UsersControllerTest extends FeatureBaseTestCase
 
     public function test_index(): void
     {
-        $response = $this->get('/api/admin/users');
+        $response = $this->get('/api/admin/user');
 
         $response->assertStatus(Response::HTTP_OK);
     }
@@ -34,7 +34,7 @@ class UsersControllerTest extends FeatureBaseTestCase
     public function test_index_with_role(): void
     {
         $role = 'instructor';
-        $response = $this->get('/api/admin/users?role=' . $role);
+        $response = $this->get('/api/admin/user?role=' . $role);
 
         $response->assertStatus(Response::HTTP_OK);
         $this->assertCount(3, $response->json());
@@ -46,7 +46,7 @@ class UsersControllerTest extends FeatureBaseTestCase
     public function test_index_with_name(): void
     {
         $name = '二郎';
-        $response = $this->get('/api/admin/users?name=' . $name);
+        $response = $this->get('/api/admin/user?name=' . $name);
 
         $response->assertStatus(Response::HTTP_OK);
         $this->assertCount(2, $response->json());
@@ -60,7 +60,7 @@ class UsersControllerTest extends FeatureBaseTestCase
     {
         $role = 'student';
         $name = '三郎';
-        $response = $this->get('/api/admin/users?role=' . $role . '&name=' . $name);
+        $response = $this->get('/api/admin/user?role=' . $role . '&name=' . $name);
 
         $response->assertStatus(Response::HTTP_OK);
         $this->assertCount(1, $response->json());
@@ -69,15 +69,44 @@ class UsersControllerTest extends FeatureBaseTestCase
         }
     }
 
-    public function test_careate(): void
+    public function test_create_with_valid_data(): void
     {
-        $response = $this->post('/api/admin/users', [
+        $response = $this->post('/api/admin/user', [
             'name' => 'テスト一太郎',
-            'emal' => 'test1ta@hogehoge.com',
-            'password' => 'hogehoge',
+            'email' => 'test1ta@hogehoge.com',
             'role' => 'instructor',
         ]);
 
         $response->assertStatus(Response::HTTP_CREATED);
+    }
+
+    public function test_create_with_invalid_data(): void
+    {
+        $response = $this->post('/api/admin/user', [
+            'name' => '',
+            'email' => 'test1ta@hogehoge.com',
+            'role' => 'instructor',
+        ]);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $data = $response->json();
+        $this->assertArrayHasKey('name', $data['errors']);
+
+        $response = $this->post('/api/admin/user', [
+            'name' => 'テスト一太郎',
+            'email' => '',
+            'role' => 'instructor',
+        ]);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $data = $response->json();
+        $this->assertArrayHasKey('email', $data['errors']);
+
+        $response = $this->post('/api/admin/user', [
+            'name' => 'テスト一太郎',
+            'email' => 'test1ta@hogehoge.com',
+            'role' => '',
+        ]);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $data = $response->json();
+        $this->assertArrayHasKey('role', $data['errors']);
     }
 }

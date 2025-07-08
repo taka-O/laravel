@@ -22,5 +22,6 @@ Route::group([
     'namespace' => 'App\Http\Controllers\admin',
     'prefix' => 'admin'
 ], function () {
-    Route::get('users', 'UsersController@index');
+    Route::get('user', 'UserController@index');
+    Route::post('user', 'UserController@create');
 });
