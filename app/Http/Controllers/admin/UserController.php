@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\admin\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\admin\Controller;
 use App\Http\Requests\NewUserRequest;
 use App\Models\User;
 use App\Enums\Role;
 
 class UserController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request): JsonResponse {
         $userQuery = User::query();
         $role = $request->query('role');
         if ($role) {
@@ -30,7 +31,7 @@ class UserController extends Controller
         $user->createNewUser($request->only(['name', 'email', 'role']));
 
         return response()->json([
-            "message" => "student record created"
+            "message" => "user record created"
         ], 201);
     }
 }
