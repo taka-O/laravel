@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\CustomFormRequest;
 use App\Enums\Role;
 
-class NewUserRequest extends CustomFormRequest
+class AdminUserRequest extends CustomFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

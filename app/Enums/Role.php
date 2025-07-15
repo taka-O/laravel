@@ -25,4 +25,19 @@ enum Role: int
             self::student => '学生',
         };
     }
+
+    public function isAdmin(): bool
+    {
+        return ($this === self::admin);
+    }
+
+    public function isInstructor(): bool
+    {
+        return ($this === self::instructor);
+    }
+
+    public function isStudent(): bool
+    {
+        return ($this === self::student);
+    }
 }

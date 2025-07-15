@@ -4,8 +4,9 @@ namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\admin\Controller;
-use App\Http\Requests\NewUserRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminUserRequest;
 use App\Models\User;
 use App\Enums\Role;
 
@@ -26,12 +27,23 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    public function create(NewUserRequest $request) {
+    public function store(AdminUserRequest $request): JsonResponse {
         $user = new User;
         $user->createNewUser($request->only(['name', 'email', 'role']));
 
-        return response()->json([
-            "message" => "user record created"
-        ], 201);
+        return response()->json($user, 201);
+    }
+
+    public function update(AdminUserRequest $request, string $id): JsonResponse {
+        try {
+            $user = User::findOrFail($id);
+            $user->updateUser($request->only(['name', 'email', 'role']));
+
+            return response()->json($user, 201);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                "message" => "User Not Found"
+            ], 404);
+        }
     }
 }

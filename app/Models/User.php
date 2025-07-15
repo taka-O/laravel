@@ -94,12 +94,34 @@ class User extends Authenticatable implements JWTSubject
 
     public function createNewUser(Array $param): void
     {
-        $new_user = new User;
-        $new_user->pid = Str::uuid();
-        $new_user->name = $param['name'];
-        $new_user->email = $param['email'];
-        $new_user->password = bcrypt(Str::password());
-        $new_user->role_type = Role::getByName($param['role'])->value;
-        $new_user->save();
+        $this->pid = Str::uuid();
+        $this->name = $param['name'];
+        $this->email = $param['email'];
+        $this->password = bcrypt(Str::password());
+        $this->role_type = Role::getByName($param['role'])->value;
+        $this->save();
+    }
+
+    public function updateUser(Array $param): void
+    {
+        $this->name = $param['name'];
+        $this->email = $param['email'];
+        $this->role_type = Role::getByName($param['role'])->value;
+        $this->save();
+    }
+
+    public function isAdmin(): bool
+    {
+        return Role::from($this->role_type)->isAdmin();
+    }
+
+    public function isInstructor(): bool
+    {
+        return Role::from($this->role_type)->isInstructor();
+    }
+
+    public function isStudent(): bool
+    {
+        return Role::from($this->role_type)->isStudent();
     }
 }
