@@ -4,7 +4,6 @@ namespace Tests\Feature\Http\Controllers\admin;
 
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Hash;
 use Tests\Feature\FeatureBaseTestCase;
 use App\Models\User;
 use App\Enums\Role;
@@ -32,7 +31,7 @@ class UserControllerTest extends FeatureBaseTestCase
         if ($role_type == null) {
             $role_type = Role::Admin->value;
         }
-        $login_user = User::factory()->create(['name' => 'アドミン太郎', 'password' => Hash::make('password'), 'role_type' => $role_type]);
+        $login_user = User::factory()->create(['name' => 'アドミン太郎', 'password' => bcrypt('password'), 'role_type' => $role_type]);
 
         // ログイン処理
         $res = $this->post('/api/auth/login', [
@@ -149,7 +148,7 @@ class UserControllerTest extends FeatureBaseTestCase
 
     public function test_update_with_valid_data(): void
     {
-        $user = User::factory()->create(['name' => 'テスト一太郎', 'password' => Hash::make('password'), 'email' => 'test1ta@hogehoge.com', 'role_type' => Role::admin->value]);
+        $user = User::factory()->create(['name' => 'テスト一太郎', 'password' => bcrypt('password'), 'email' => 'test1ta@hogehoge.com', 'role_type' => Role::admin->value]);
         $response = $this->withHeaders($this->getHeaders())->put('/api/admin/users/' . $user->id, [
             'name' => 'アップデート一太郎',
             'email' => 'update1ta@hogehoge.com',
@@ -166,7 +165,7 @@ class UserControllerTest extends FeatureBaseTestCase
 
     public function test_update_with_not_exist_user(): void
     {
-        $user = User::factory()->create(['name' => 'テスト一太郎', 'password' => Hash::make('password'), 'email' => 'test1ta@hogehoge.com', 'role_type' => Role::admin->value]);
+        $user = User::factory()->create(['name' => 'テスト一太郎', 'password' => bcrypt('password'), 'email' => 'test1ta@hogehoge.com', 'role_type' => Role::admin->value]);
         $response = $this->withHeaders($this->getHeaders())->put('/api/admin/users/' . $user->id + 100, [
             'name' => 'アップデート一太郎',
             'email' => 'update1ta@hogehoge.com',
@@ -178,7 +177,7 @@ class UserControllerTest extends FeatureBaseTestCase
 
     public function test_update_with_no_authority_user(): void
     {
-        $user = User::factory()->create(['name' => 'テスト一太郎', 'password' => Hash::make('password'), 'email' => 'test1ta@hogehoge.com', 'role_type' => Role::admin->value]);
+        $user = User::factory()->create(['name' => 'テスト一太郎', 'password' => bcrypt('password'), 'email' => 'test1ta@hogehoge.com', 'role_type' => Role::admin->value]);
         $headers = $this->getHeaders('student');
         $response = $this->withHeaders($headers)->put('/api/admin/users/' . $user->id, [
             'name' => 'アップデート一太郎',

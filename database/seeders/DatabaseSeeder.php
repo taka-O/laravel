@@ -15,14 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $user = User::where("role_type", Role::admin->value)->first();
 
-        User::factory()->create([
-            'pid' => (string) Str::uuid(),
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('Passw0rd'),
-            'role' => Role::admin,
-        ]);
+        if ($user === null) {
+            User::factory()->create([
+                'pid' => (string) Str::uuid(),
+                'name' => 'Admin',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('Passw0rd'),
+                'role' => Role::admin,
+            ]);
+        }
     }
 }
