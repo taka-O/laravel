@@ -23,10 +23,11 @@ class AdminUserRequest extends CustomFormRequest
     public function rules(): array
     {
         $role_values = implode(",", array_values(array_column(Role::cases(), 'name')));
+        $roles = $role_values . "," . strtoupper($role_values);
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'role' => ['required', 'string', "in:$role_values"],
+            'role' => ['required', 'string', "in:$roles"],
         ];
     }
 }
