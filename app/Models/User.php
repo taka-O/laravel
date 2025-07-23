@@ -98,7 +98,7 @@ class User extends Authenticatable implements JWTSubject
         $this->name = $param['name'];
         $this->email = $param['email'];
         $this->password = bcrypt(Str::password());
-        $this->role_type = Role::getByName($param['role'])->value;
+        $this->role_type = Role::getByName(strtolower($param['role']))->value;
         $this->save();
     }
 
