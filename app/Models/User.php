@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Str;
 use App\Enums\Role;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -123,5 +124,10 @@ class User extends Authenticatable implements JWTSubject
     public function isStudent(): bool
     {
         return Role::from($this->role_type)->isStudent();
+    }
+
+    public function sendPasswordResetMail($token, $reset_url)
+    {
+        $this->notify(new ResetPasswordNotification($token, $reset_url));
     }
 }

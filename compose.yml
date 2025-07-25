@@ -32,7 +32,7 @@ services:
   db:
     image: mysql:8.4
     platform: linux/arm64/v8
-    container_name: laravel_mysql
+    container_name: laravel-mysql
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -44,9 +44,21 @@ services:
     networks:
       - dev_network
 
+  mailhog:
+    image: mailhog/mailhog
+    container_name: laravel-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    volumes:
+      - mailhog-data:/data
+    networks:
+      - dev_network
+
 volumes:
   mysql_data:
   vendor:
+  mailhog-data:
 
 networks:
   dev_network:

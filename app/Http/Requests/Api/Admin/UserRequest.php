@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api\Admin;
 
 use App\Http\Requests\CustomFormRequest;
 use App\Enums\Role;
 
-class AdminUserRequest extends CustomFormRequest
+class UserRequest extends CustomFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
