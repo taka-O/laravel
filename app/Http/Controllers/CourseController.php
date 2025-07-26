@@ -12,15 +12,13 @@ class CourseController extends Controller
         $now = now();
         $user = auth()->user();
         $courseQuery = Course::query()
+                            ->selectRaw('courses.*')
                             ->where('start_at', '<=', $now)
                             ->where('end_at', '>=', $now);
         if (!$user->isAdmin()) {
             $courseQuery = $courseQuery
-                                ->whereIn('id',
-                                    Course::select('courses.id')
-                                        ->join('course_users', 'courses.id', '=', 'course_users.course_id')
-                                        ->where('course_users.user_id', "=", $user->id)
-                                );
+                                ->join('course_users', 'courses.id', '=', 'course_users.course_id')
+                                ->where('course_users.user_id', "=", $user->id);
         }
 
         if ($user->isStudent()) {
