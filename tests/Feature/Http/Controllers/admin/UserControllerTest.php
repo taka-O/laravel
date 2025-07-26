@@ -10,8 +10,6 @@ use App\Enums\Role;
 
 class UserControllerTest extends FeatureBaseTestCase
 {
-    public $headers;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -23,24 +21,6 @@ class UserControllerTest extends FeatureBaseTestCase
         User::factory()->create(['name' => '生徒二郎', 'role_type' => Role::student->value]);
         User::factory()->create(['name' => '生徒三郎', 'role_type' => Role::student->value]);
         User::factory()->create(['name' => '生徒四郎', 'role_type' => Role::student->value]);
-    }
-
-    public function getHeaders(string $role = 'admin')
-    {
-        $role_type = Role::getByName($role)->value;
-        if ($role_type == null) {
-            $role_type = Role::Admin->value;
-        }
-        $login_user = User::factory()->create(['name' => 'アドミン太郎', 'password' => bcrypt('password'), 'role_type' => $role_type]);
-
-        // ログイン処理
-        $res = $this->post('/api/auth/login', [
-            'email' => $login_user->email,
-            'password' => 'password',
-        ]);
-        $data = json_decode($res->content(), true);
-
-        return ['Authorization' => 'Bearer ' . $data['token']];
     }
 
     public function test_index(): void
