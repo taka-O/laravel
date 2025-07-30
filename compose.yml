@@ -44,21 +44,27 @@ services:
     networks:
       - dev_network
 
-  mailhog:
-    image: mailhog/mailhog
-    container_name: laravel-mailhog
+  mail:
+    image: axllent/mailpit:latest
+    container_name: laravel-mailpit
     ports:
       - "1025:1025"
       - "8025:8025"
     volumes:
-      - mailhog-data:/data
+      - mailpit-data:/data
+    environment:
+      TZ: Asia/Tokyo
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
     networks:
       - dev_network
 
 volumes:
   mysql_data:
   vendor:
-  mailhog-data:
+  mailpit-data:
 
 networks:
   dev_network:

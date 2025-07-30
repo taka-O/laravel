@@ -14,14 +14,16 @@ class ResetPasswordNotification extends Notification
 
     public $token;
     public $reset_url;
+    public $email;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($token, $reset_url)
+    public function __construct($token, $reset_url, $email)
     {
        $this->token = $token;
-       $this->token = $reset_url;
+       $this->reset_url = $reset_url;
+       $this->email = $email;
     }
 
     /**
@@ -39,7 +41,7 @@ class ResetPasswordNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = $reset_url . '?' . $this->token;
+        $url = $this->reset_url . '?token=' . $this->token . '&email=' . $this->email;
 
         return (new MailMessage)
             ->subject('パスワードリセット通知')
