@@ -27,7 +27,7 @@ class SendPasswordResetTest extends TestCase
         $user = User::factory()->create();
 
         $params = ['email' => $user->email, 'reset_url' => 'http://localhost:3001/reset_password'];
-        $response = $this->post('/api/auth/send_reset_password', $params);
+        $response = $this->post('/api/auth/send_reset_password_token', $params);
         $response->assertStatus(Response::HTTP_NO_CONTENT);
 
         Notification::assertSentTo(
@@ -48,7 +48,7 @@ class SendPasswordResetTest extends TestCase
         $user = User::factory()->create();
 
         $params = ['email' => $this->faker->email, 'reset_url' => 'http://localhost:3001/reset_password'];
-        $response = $this->post('/api/auth/send_reset_password', $params);
+        $response = $this->post('/api/auth/send_reset_password_token', $params);
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         Notification::assertNothingSent();
