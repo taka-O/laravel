@@ -8,7 +8,8 @@ Laravel 12.0<br/>
 mysql 8.4<br/>
 
 # Dockerセットアップ、および起動
-docker compose up -d
+docker compose up -d<br>
+※　エラー「network dev_network declared as external, but could not be found」が表示された場合、compose.ymlの「external: true」をコメントアウトして再実行する
 
 # Docker laravel環境への接続
 docker compose exec laravel bash
